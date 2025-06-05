@@ -3,8 +3,7 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Facades\Route;
-use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
-use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
+use App\Http\Controllers\PaymentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,12 +17,9 @@ use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 |
 */
 
-Route::middleware([
-    'web',
-    InitializeTenancyByDomain::class,
-    PreventAccessFromCentralDomains::class,
-])->group(function () {
-    Route::get('/', function () {
-        return 'This is your multi-tenant application. The id of the current tenant is ' . tenant('id');
-    });
+Route::middleware(['web', 'tenant'])->group(function () {
+    Route::post('/pagos/preferencia', [PaymentController::class, 'createPreference'])->name('tenant.payment.preference');
+    Route::get('/pagos/success', [PaymentController::class, 'paymentSuccess'])->name('tenant.payment.success');
+    Route::get('/pagos/failure', [PaymentController::class, 'paymentFailure'])->name('tenant.payment.failure');
+    Route::get('/pagos/pending', [PaymentController::class, 'paymentPending'])->name('tenant.payment.pending');
 });
