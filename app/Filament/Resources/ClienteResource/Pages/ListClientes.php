@@ -14,6 +14,11 @@ class ListClientes extends ListRecords
     {
         return [
             Actions\CreateAction::make(),
+            Actions\Action::make('exportExcel')
+                ->label('Exportar Excel')
+                ->icon('heroicon-o-arrow-down-tray')
+                ->url(route('clientes.export'))
+                ->openUrlInNewTab(),
         ];
     }
 }
